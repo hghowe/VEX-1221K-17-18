@@ -22,6 +22,7 @@
  */
 void initializeIO() {
   pinMode(BUTTON_PORT,INPUT);
+  pinMode(GREEN_LED_PIN,OUTPUT);
 }
 
 /*

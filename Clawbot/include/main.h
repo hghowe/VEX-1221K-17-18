@@ -27,6 +27,7 @@
 
 #define ULTRASONIC_ORANGE 2
 #define ULTRASONIC_YELLOW 3
+#define GREEN_LED_PIN 12
 
 #include <API.h>
 #define BUTTON_PORT 3

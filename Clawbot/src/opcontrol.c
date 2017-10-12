@@ -80,8 +80,17 @@ void operatorControl()
 					motorSet(1, power + turn);
 					motorSet(10, -1*(power-turn)); // the -1 is because the motor is reversed.
 
-					printf ("Test.");
+					// printf ("Test.");
 					// printf("%d",digitalRead(BUTTON_PORT));
+
+					if (ultrasonicGet(sonar) > 70)
+					{
+						digitalWrite(GREEN_LED_PIN, HIGH);
+					}
+					else
+					{
+						digitalWrite(GREEN_LED_PIN, LOW);
+					}
 
 					delay(20);
 		}
