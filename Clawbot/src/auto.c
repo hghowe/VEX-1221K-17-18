@@ -10,7 +10,7 @@
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
 
-#include "main.h" 
+#include "main.h"
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
@@ -71,6 +71,7 @@ void autonomous()
   // moveForward(-127,100);
   // stopall();
   // delay(500);
+  delay(200);
   moveForwardUntil(127);
 }
 
