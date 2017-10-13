@@ -37,7 +37,7 @@
    motorSet(10, -power);
    while (ultrasonicGet(sonar) > 70)
    {
-     delay(1);
+     delay(100);
      if (!isAutonomous())
       break;
    }
