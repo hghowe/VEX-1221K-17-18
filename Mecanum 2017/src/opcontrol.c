@@ -41,18 +41,11 @@
 	 {
 		  timeSinceStart = millis()-startTime;
 	 		checkSensors();
+      autoProcesses();
 	 		processMotors();
 	 		updateScreen();
 	 		delay(20);
 	 	}
- }
-
- /**
-  * Refresh what is shown on the LCD screen.
-  */
- void updateScreen()
- {
- 	lcdPrint(uart1, 1, "Go Falcons!");
  }
 
  /**
@@ -65,7 +58,22 @@
  	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,4);
+ }
 
+ /**
+  * Refresh what is shown on the LCD screen.
+  */
+ void updateScreen()
+ {
+ 	lcdPrint(uart1, 1, "Go Falcons!");
+ }
+
+ /**
+ * performs any automatic functions on variables (e.g. lift to a certain height)
+ */
+ void autoProcesses()
+ {
+   ; // nothing, for now....
  }
 
 /**
