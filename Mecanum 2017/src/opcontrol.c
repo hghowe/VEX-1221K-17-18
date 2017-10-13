@@ -41,18 +41,24 @@
 	 {
 		  timeSinceStart = millis()-startTime;
 	 		checkSensors();
-	 		attemptToReachDesiredWristLevel();
 	 		processMotors();
 	 		updateScreen();
 	 		delay(20);
 	 	}
  }
 
+ /**
+  * Refresh what is shown on the LCD screen.
+  */
  void updateScreen()
  {
  	lcdPrint(uart1, 1, "Go Falcons!");
  }
 
+ /**
+  *  read the sensors, both on the driver's/drivers' controller(s), and any
+  *  on the robot, itself. Update variables that can be read by other methods.
+  */
  void checkSensors()
  {
  	// read the joysticks - they control the motors.
@@ -62,6 +68,10 @@
 
  }
 
+/**
+ * Based on the variables in this program about desired behavior,
+ decide what to do with the motors to try to make this behavior happen.
+ */
  void processMotors()
  {
  	int RF_motor_power = normalizeMotorPower(y_input - x_input - angle_input);
@@ -76,6 +86,11 @@
 
  }
 
+ /**
+  * restricts the motor's power to be within -127 to +127, just in case we are
+  trying to apply power out of that range. Also latches power settings that are
+  close to 0 to be zero, so we don't have fine drift.
+  */
  int normalizeMotorPower(int power)
  {
  	if (power>127)
@@ -87,6 +102,3 @@
  	return power;
 
  }
-
-
- 

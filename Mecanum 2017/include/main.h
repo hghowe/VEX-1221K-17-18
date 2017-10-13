@@ -131,6 +131,30 @@ int K_getMotor(int whichPort);
  */
 void K_floatMotor(int whichPort);
 
+/**
+ * restricts the motor's power to be within -127 to +127, just in case we are
+ trying to apply power out of that range. Also latches power settings that are
+ close to 0 to be zero, so we don't have fine drift.
+ */
+int normalizeMotorPower(int power);
+
+// ---------------------------  Methods in opcontrol.c
+/**
+ *  read the sensors, both on the driver's/drivers' controller(s), and any
+ *  on the robot, itself. Update variables that can be read by other methods.
+ */
+void checkSensors();
+
+/**
+ * Refresh what is shown on the LCD screen.
+ */ 
+void updateScreen();
+
+/**
+ * Based on the variables in this program about desired behavior,
+ decide what to do with the motors to try to make this behavior happen.
+ */
+void processMotors();
 
 
 // End C++ export structure
