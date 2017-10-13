@@ -64,3 +64,20 @@ void K_stopMotor(int whichPort)
 {
 	motorSet(whichPort,0);
 }
+
+/**
+ * restricts the motor's power to be within -127 to +127, just in case we are
+ trying to apply power out of that range. Also latches power settings that are
+ close to 0 to be zero, so we don't have fine drift.
+ */
+int normalizeMotorPower(int power)
+{
+ if (power>127)
+	 return 127;
+ if (power<-127)
+	 return -127;
+ if (power<10 && power>-10)
+	 return 0;
+ return power;
+
+}
