@@ -29,8 +29,64 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
-void operatorControl() {
-	while (1) {
-		delay(20);
-	}
-}
+ int x_input, y_input, angle_input;
+ long int startTime;
+ long int timeSinceStart;
+
+ void operatorControl()
+ {
+	 startTime = millis();
+
+	 while (1)
+	 {
+		  timeSinceStart = millis()-startTime;
+	 		checkSensors();
+	 		attemptToReachDesiredWristLevel();
+	 		processMotors();
+	 		updateScreen();
+	 		delay(20);
+	 	}
+ }
+
+ void updateScreen()
+ {
+ 	lcdPrint(uart1, 1, "Go Falcons!");
+ }
+
+ void checkSensors()
+ {
+ 	// read the joysticks - they control the motors.
+ 	x_input = joystickGetAnalog(1,1);
+ 	y_input = joystickGetAnalog(1,2);
+ 	angle_input = joystickGetAnalog(1,4);
+
+ }
+
+ void processMotors()
+ {
+ 	int RF_motor_power = normalizeMotorPower(y_input - x_input - angle_input);
+ 	int RB_motor_power = normalizeMotorPower(y_input + x_input - angle_input);
+ 	int LF_motor_power = normalizeMotorPower(y_input + x_input + angle_input);
+ 	int LB_motor_power = normalizeMotorPower(y_input - x_input + angle_input);
+
+ 	K_setMotor(PORT_MOTOR_FRONT_LEFT,LF_motor_power);
+ 	K_setMotor(PORT_MOTOR_BACK_LEFT,LB_motor_power);
+ 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
+ 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
+
+ }
+
+ int normalizeMotorPower(int power)
+ {
+ 	if (power>127)
+ 		return 127;
+ 	if (power<-127)
+ 		return -127;
+ 	if (power<10 && power>-10)
+ 		return 0;
+ 	return power;
+
+ }
+
+
+ 

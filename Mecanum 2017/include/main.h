@@ -45,7 +45,6 @@
 
 
 #include <API.h>
-
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
 extern "C" {
@@ -112,6 +111,27 @@ void initialize();
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl();
+
+// --------------------------   Common motor functions to be implemented in SharedMotorControl
+/**
+ *  turns on the given motor at the current power level - just like motorSet, but incorporates
+ *  MOTOR_DIRECTION so we can assume positive is always forward.
+ */
+void K_setMotor(int whichPort, int power);
+
+/*
+ * determines the current setting for thie given motor, -128 <-> + 128. Based on the
+ * DIRECTION_MODIFIERS, so it is compatible with K_setMotor.
+ */
+int K_getMotor(int whichPort);
+
+/**
+ * sets the motor to power level 1 or -1, so the motor is free to rotate (as opposed to 0,
+ * which puts on the brakes). If the motor is already set to zero, it stays at zero.
+ */
+void K_floatMotor(int whichPort);
+
+
 
 // End C++ export structure
 #ifdef __cplusplus
