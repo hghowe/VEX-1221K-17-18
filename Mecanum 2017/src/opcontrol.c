@@ -42,7 +42,7 @@
 		  timeSinceStart = millis()-startTime;
 	 		checkSensors();
       autoProcesses();
-	 		processMotors();
+	 		processMotors(); // convert the variables to motor commands
 	 		updateScreen();
 	 		delay(20);
 	 	}
