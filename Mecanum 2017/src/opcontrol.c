@@ -82,14 +82,7 @@
  */
  void processMotors()
  {
- 	int RF_motor_power = normalizeMotorPower(y_input + x_input - angle_input);
- 	int RB_motor_power = normalizeMotorPower(y_input - x_input - angle_input);
- 	int LF_motor_power = normalizeMotorPower(y_input - x_input + angle_input);
- 	int LB_motor_power = normalizeMotorPower(y_input + x_input + angle_input);
 
- 	K_setMotor(PORT_MOTOR_FRONT_LEFT,LF_motor_power);
- 	K_setMotor(PORT_MOTOR_BACK_LEFT,LB_motor_power);
- 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
- 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
+  manageDriveMotors(x_input, y_input, angle_input);
 
  }

@@ -81,3 +81,23 @@ int normalizeMotorPower(int power)
  return power;
 
 }
+
+/**
+* turns on the motors in the drive chain to make the wheels move the robot
+* in the direction given.
+* x_motion - the left/right "drift" of the robot (-127, 127)
+* y_motion - the forward/backward "drive" of the robot (-127, 127)
+* angle_motion - the rotational "twist" of the robot (-127, 127)
+*/
+void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
+{
+	int RF_motor_power = normalizeMotorPower(y_motion + x_motion - angle_motion);
+ 	int RB_motor_power = normalizeMotorPower(y_motion - x_motion - angle_motion);
+ 	int LF_motor_power = normalizeMotorPower(y_motion - x_motion + angle_motion);
+ 	int LB_motor_power = normalizeMotorPower(y_motion + x_motion + angle_motion);
+
+ 	K_setMotor(PORT_MOTOR_FRONT_LEFT,LF_motor_power);
+ 	K_setMotor(PORT_MOTOR_BACK_LEFT,LB_motor_power);
+ 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
+ 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
+}

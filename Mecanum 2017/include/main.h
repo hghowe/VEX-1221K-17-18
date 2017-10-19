@@ -162,6 +162,15 @@ void autoProcesses();
  */
 void processMotors();
 
+/**
+* turns on the motors in the drive chain to make the wheels move the robot
+* in the direction given.
+* x_motion - the left/right "drift" of the robot (-127, 127)
+* y_motion - the forward/backward "drive" of the robot (-127, 127)
+* angle_motion - the rotational "twist" of the robot (-127, 127)
+*/
+void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
+
 
 
 // End C++ export structure
