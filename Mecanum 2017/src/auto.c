@@ -69,13 +69,13 @@ void autonomous()
 
   while(true)
   {
-    long timeSinceStart = millis() - startOfAuton;
+    timeSinceStart = millis() - startOfAuton;
 
     // loop through all the timers....
     for (int i = 0; i<numTimers; i++)
     {
        // Should this particular timer be triggered?
-       if ((timers[i][IS_ACTIVE] == true) && (timers[i][TRIGGER_TIME]< timeSinceStart))
+       if ((timers[i][IS_ACTIVE] == true) && (timers[i][TRIGGER_TIME] <= timeSinceStart))
        {
          switch (i) // decide which "case" to do based on the value of "i"
          {
@@ -89,7 +89,7 @@ void autonomous()
            break;
            case 2:
               actionStatus[2] = true;
-              timers[2][IS_ACTIVE] += 500; // try this again in 500 ms.
+              timers[2][TRIGGER_TIME] += 500; // try this again in 500 ms.
            break;
            case 3:
               actionStatus[3] = true;
@@ -170,9 +170,6 @@ void backFull()
   auto_angle_motion = 0;
 }
 
-
-
-
 /*
 *  based on the state of the global variables, update the motors.
 */
@@ -181,5 +178,6 @@ void auton_process_motors()
    // tell the chassis how to drive...
    manageDriveMotors(auto_x_motion, auto_y_motion, auto_angle_motion);
 
-   digitalWrite(3,LED_state); // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
+   // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
+   digitalWrite(3,LED_state);
 }
