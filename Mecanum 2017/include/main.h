@@ -171,6 +171,20 @@ void processMotors();
 */
 void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
 
+// -------------------------  Methods in Autonomous --------------------------
+/*
+* tell all the drive motors to stop.
+*/
+void allStop();
+
+/*
+*  based on the state of the global variables, update the motors.
+*/
+void auton_process_motors();
+
+
+
+
 
 
 // End C++ export structure
