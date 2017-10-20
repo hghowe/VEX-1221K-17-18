@@ -29,69 +29,60 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
+ int x_input, y_input, angle_input;
+ long int startTime;
+ long int timeSinceStart;
 
+ void operatorControl()
+ {
+	 startTime = millis();
 
-void operatorControl()
-{
-		bool clawOpen;
-		bool clawClose;
+	 while (1)
+	 {
+		  timeSinceStart = millis()-startTime;
+	 		checkSensors();
+      autoProcesses();
+	 		processMotors(); // convert the variables to motor commands
+	 		updateScreen();
+	 		delay(20);
+	 	}
+ }
 
-		bool armUp;
-		bool armDown;
+ /**
+  *  read the sensors, both on the driver's/drivers' controller(s), and any
+  *  on the robot, itself. Update variables that can be read by other methods.
+  */
+ void checkSensors()
+ {
+ 	// read the joysticks - they control the motors.
+ 	x_input = joystickGetAnalog(1,1);
+ 	y_input = joystickGetAnalog(1,2);
+ 	angle_input = joystickGetAnalog(1,4);
+ }
 
-		int power;
-	  int turn;
-		int clawPower;
-		int armPower;
-		while (1)
-		{
-					clawOpen = joystickGetDigital(1,5,JOY_UP);
-					clawClose = joystickGetDigital(1,5,JOY_DOWN);
+ /**
+  * Refresh what is shown on the LCD screen.
+  */
+ void updateScreen()
+ {
+ 	lcdPrint(uart1, 1, "Go Falcons!");
+ }
 
-					armUp = joystickGetDigital(1,6,JOY_UP);
-					armDown = joystickGetDigital(1,6,JOY_DOWN);
+ /**
+ * performs any automatic functions on variables (e.g. lift to a certain height)
+ */
+ void autoProcesses()
+ {
+   ; // nothing, for now....
+ }
 
-	        turn = (joystickGetAnalog(1, 4) + joystickGetAnalog(1, 1))/2; // vertical axis on right joystick
-	        power = (joystickGetAnalog(1, 3) + joystickGetAnalog(1, 2))/2; // horizontal axis on right joystick
+/**
+ * Based on the variables in this program about desired behavior,
+ decide what to do with the motors to try to make this behavior happen.
+ */
+ void processMotors()
+ {
 
-					clawPower = 0;
-					if (clawOpen == 1)
-					{
-						clawPower = 110;
-					}
-					if (clawClose == 1)
-					{
-						clawPower = clawPower  -110;
-					}
+  manageDriveMotors(x_input, y_input, angle_input);
 
-					armPower = 0;
-					if (armDown == 1)
-					{
-						armPower = 110;
-					}
-					if (armUp == 1)
-					{
-						armPower = armPower  -110;
-					}
-
-					motorSet(6,clawPower);
-					motorSet(7,armPower);
-
-					motorSet(1, power + turn);
-					motorSet(10, -1*(power-turn)); // the -1 is because the motor is reversed.
-
-					// printf ("Test.");
-					// printf("%d",digitalRead(BUTTON_PORT));
-
-					if (ultrasonicGet(sonar) > 70)
-					{
-						digitalWrite(GREEN_LED_PIN, HIGH);
-					}
-					else
-					{
-						digitalWrite(GREEN_LED_PIN, LOW);
-					}
-
-					delay(20);
-		}
-}
+ }

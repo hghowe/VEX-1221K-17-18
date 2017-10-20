@@ -21,8 +21,6 @@
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
-  pinMode(BUTTON_PORT,INPUT);
-  pinMode(GREEN_LED_PIN,OUTPUT);
 }
 
 /*
@@ -39,5 +37,4 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-  sonar = ultrasonicInit(ULTRASONIC_ORANGE, ULTRASONIC_YELLOW);
 }

@@ -24,18 +24,31 @@
 
 // This prevents multiple inclusion, which isn't bad for this file but is good practice
 #define MAIN_H_
+#define PORT_MOTOR_BACK_LEFT 8
+#define PORT_MOTOR_BACK_RIGHT 6
+#define PORT_MOTOR_FRONT_LEFT 9
+#define PORT_MOTOR_FRONT_RIGHT 7
 
-#define ULTRASONIC_ORANGE 2
-#define ULTRASONIC_YELLOW 3
-#define GREEN_LED_PIN 12
+#define PORT_ORIENTATION_NORMAL 1
+#define PORT_ORIENTATION_REVERSED -1
+
+#define PORT_ORIENTATION_1 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_2 PORT_ORIENTATION_NORMAL
+#define PORT_ORIENTATION_3 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_4 PORT_ORIENTATION_NORMAL
+#define PORT_ORIENTATION_5 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_6 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_7 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_8 PORT_ORIENTATION_NORMAL
+#define PORT_ORIENTATION_9 PORT_ORIENTATION_NORMAL
+#define PORT_ORIENTATION_10 PORT_ORIENTATION_NORMAL
+
 
 #include <API.h>
-#define BUTTON_PORT 3
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
 extern "C" {
 #endif
-Ultrasonic sonar;
 
 // A function prototype looks exactly like its declaration, but with a semicolon instead of
 // actual code. If a function does not match a prototype, compile errors will occur.
@@ -99,14 +112,69 @@ void initialize();
  */
 void operatorControl();
 
-void moveForward(int power, int timeInterval);
-void stopMotors();
-void stopall();
+// --------------------------   Common motor functions to be implemented in SharedMotorControl
+/**
+ *  turns on the given motor at the current power level - just like motorSet, but incorporates
+ *  MOTOR_DIRECTION so we can assume positive is always forward.
+ */
+void K_setMotor(int whichPort, int power);
+
+/*
+ * determines the current setting for thie given motor, -128 <-> + 128. Based on the
+ * DIRECTION_MODIFIERS, so it is compatible with K_setMotor.
+ */
+int K_getMotor(int whichPort);
+
+/**
+ * sets the motor to power level 1 or -1, so the motor is free to rotate (as opposed to 0,
+ * which puts on the brakes). If the motor is already set to zero, it stays at zero.
+ */
+void K_floatMotor(int whichPort);
+
+/**
+ * restricts the motor's power to be within -127 to +127, just in case we are
+ trying to apply power out of that range. Also latches power settings that are
+ close to 0 to be zero, so we don't have fine drift.
+ */
+int normalizeMotorPower(int power);
+
+// ---------------------------  Methods in opcontrol.c
+/**
+ *  read the sensors, both on the driver's/drivers' controller(s), and any
+ *  on the robot, itself. Update variables that can be read by other methods.
+ */
+void checkSensors();
+
+/**
+ * Refresh what is shown on the LCD screen.
+ */
+void updateScreen();
+
+/**
+* performs any automatic functions on variables (e.g. lift to a certain height)
+*/
+void autoProcesses();
+
+
+/**
+ * Based on the variables in this program about desired behavior,
+ decide what to do with the motors to try to make this behavior happen.
+ */
+void processMotors();
+
+/**
+* turns on the motors in the drive chain to make the wheels move the robot
+* in the direction given.
+* x_motion - the left/right "drift" of the robot (-127, 127)
+* y_motion - the forward/backward "drive" of the robot (-127, 127)
+* angle_motion - the rotational "twist" of the robot (-127, 127)
+*/
+void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
+
+
 
 // End C++ export structure
 #ifdef __cplusplus
-
-
 }
 #endif
 
