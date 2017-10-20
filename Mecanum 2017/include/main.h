@@ -178,6 +178,11 @@ void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
 void allStop();
 
 /*
+* turn on the motors full reverse.
+*/
+void backFull();
+
+/*
 *  based on the state of the global variables, update the motors.
 */
 void auton_process_motors();

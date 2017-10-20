@@ -27,17 +27,22 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 
+// These are the two types of things stored in the timers array -
 #define TRIGGER_TIME 0
 #define IS_ACTIVE 1
 
-// long-term variables.....
+// long-term variables..... these are about the desired motion of the chassis.
 int auto_x_motion;
 int auto_y_motion;
 int auto_angle_motion;
 
+// example for the blinking light.
 bool LED_state;
+
+// time-based variables
 long timeSinceStart;
 long startOfAuton;
+
 // Initially, none of these actions will fire...
 bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 1. all stop
@@ -50,7 +55,6 @@ int timers[][2] = {{0,true},        //0. trigger action 0
                    {1000,true},     //3. trigger action 3
                    {1500,true},     //4. trigger action 1 (!)
                    {1250,true}};    //5. deactivate trigger 2.
-
 int numTimers;
 int numActions;
 
@@ -73,7 +77,7 @@ void autonomous()
        // Should this particular timer be triggered?
        if ((timers[i][IS_ACTIVE] == true) && (timers[i][TRIGGER_TIME]< timeSinceStart))
        {
-         switch (i) // decide on which "case" to do based on the value of "i"
+         switch (i) // decide which "case" to do based on the value of "i"
          {
            case 0:
               actionStatus[0] = true;
@@ -108,15 +112,17 @@ void autonomous()
        // should this action be started?
        if (actionStatus[i] == true)
        {
-         switch (i) // decide on which "case" to do based on the value of "i"
+         switch (i) // decide which "case" to do based on the value of "i"
          {
            case 0:  // all ahead full....
+             // this is an example of writing the code in the case....
              auto_x_motion = 127;
              auto_y_motion = 0;
              auto_angle_motion = 0;
              actionStatus[0] = false;
            break;
            case 1:  // all stop.
+             // this is an example of delegating the code to a reusable method.
              allStop();
              actionStatus[1] = false;
            break;
@@ -124,6 +130,10 @@ void autonomous()
              // if LED_state was true, make it false, or vice versa.
              LED_state = ! LED_state;
              actionStatus[2] = false;
+           break;
+           case 3: // reverse
+              backFull();
+              actionStatus[3] = false;
            break;
          }
        }
@@ -149,6 +159,19 @@ void allStop()
     auto_y_motion = 0;
     auto_angle_motion = 0;
 }
+
+/*
+* turn on the motors full reverse.
+*/
+void backFull()
+{
+  auto_x_motion = 0;
+  auto_y_motion = -127;
+  auto_angle_motion = 0;
+}
+
+
+
 
 /*
 *  based on the state of the global variables, update the motors.
