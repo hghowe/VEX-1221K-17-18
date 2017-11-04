@@ -1,4 +1,4 @@
-/** @file main.h
+ /** @file main.h
  * @brief Header file for global functions
  *
  * Any experienced C or C++ programmer knows the importance of header files. For those who
@@ -28,6 +28,11 @@
 #define PORT_MOTOR_BACK_RIGHT 6
 #define PORT_MOTOR_FRONT_LEFT 9
 #define PORT_MOTOR_FRONT_RIGHT 7
+
+#define PORT_LIFT 2
+#define PORT_GRABBER 3
+
+#define JUMPER_TWO_DRIVERS 1
 
 #define PORT_ORIENTATION_NORMAL 1
 #define PORT_ORIENTATION_REVERSED -1
@@ -171,6 +176,15 @@ void processMotors();
 */
 void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
 
+/**
+* turns on the lift motor in the direction given, (-127 (down) to +127 (up))
+*/
+void manageLiftMotor(int lift_motion);
+
+/**
+* sets value of grabber servo
+*/
+void manageGrabberMotor(int grab_value);
 
 
 // End C++ export structure

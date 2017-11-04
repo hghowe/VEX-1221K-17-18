@@ -101,3 +101,20 @@ void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
  	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
  	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
 }
+
+/**
+* turns on the lift motor in the direction given, (-127 (down) to +127 (up))
+*/
+void manageLiftMotor(int lift_motion)
+{
+	int normalizedPower = normalizeMotorPower(lift_motion);
+	K_setMotor(PORT_LIFT, normalizedPower);
+}
+
+/**
+* sets value of grabber servo
+*/
+void manageGrabberMotor(int grab_value)
+{
+	K_setMotor(PORT_GRABBER, grab_value);
+}

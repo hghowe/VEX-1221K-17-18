@@ -30,13 +30,15 @@
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
  int x_input, y_input, angle_input;
+ int lift_input;
+ int grabber_value;
  long int startTime;
  long int timeSinceStart;
 
  void operatorControl()
  {
 	 startTime = millis();
-
+   grabber_value = 0;
 	 while (1)
 	 {
 		  timeSinceStart = millis()-startTime;
@@ -58,6 +60,31 @@
  	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,4);
+
+  if (digitalRead(JUMPER_TWO_DRIVERS)==LOW)
+  {
+    lift_input = joystickGetAnalog(2, 3);
+    if (joystickGetAnalog(2,2)>32 || joystickGetAnalog(2,2) < -32)
+      grabber_value += joystickGetAnalog(2,2)/8;
+  }
+  else
+  {
+    lift_input = 0;
+    if (joystickGetDigital(1, 7, JOY_UP))
+      lift_input += 100;
+    if (joystickGetDigital(1, 7, JOY_DOWN))
+      lift_input -= 100;
+
+    if (joystickGetDigital(1, 6, JOY_UP))
+      grabber_value += 10;
+    if (joystickGetDigital(1, 6, JOY_DOWN))
+      grabber_value -= 10;
+
+  }
+  if (grabber_value>127)
+    grabber_value = 127;
+  if (grabber_value < -127)
+    grabber_value = -127;
  }
 
  /**
@@ -82,7 +109,7 @@
  */
  void processMotors()
  {
-
   manageDriveMotors(x_input, y_input, angle_input);
-
+  manageLiftMotor(lift_input);
+  manageGrabberMotor(grabber_value);
  }
