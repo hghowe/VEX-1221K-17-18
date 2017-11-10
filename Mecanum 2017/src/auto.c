@@ -27,4 +27,9 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
+  // manageDriveMotors(0, -127, 0);
+  // delay(200);
+  // manageDriveMotors(0,0,0);
+  // manageGrabberMotor(-100);
+
 }

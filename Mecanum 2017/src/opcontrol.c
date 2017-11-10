@@ -57,9 +57,9 @@
  void checkSensors()
  {
  	// read the joysticks - they control the motors.
- 	x_input = joystickGetAnalog(1,1);
+ 	x_input = joystickGetAnalog(1,4); //This moves from left to right (1,4) is controller 1 and axis 4
  	y_input = joystickGetAnalog(1,2);
- 	angle_input = joystickGetAnalog(1,4);
+ 	angle_input = joystickGetAnalog(1,1);
 
   if (digitalRead(JUMPER_TWO_DRIVERS)==LOW)
   {

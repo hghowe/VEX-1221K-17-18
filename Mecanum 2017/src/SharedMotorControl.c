@@ -116,5 +116,5 @@ void manageLiftMotor(int lift_motion)
 */
 void manageGrabberMotor(int grab_value)
 {
-	K_setMotor(PORT_GRABBER, grab_value);
+	K_setMotor(PORT_GRABBER, normalizeMotorPower(grab_value));
 }
