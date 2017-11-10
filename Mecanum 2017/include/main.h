@@ -24,10 +24,10 @@
 
 // This prevents multiple inclusion, which isn't bad for this file but is good practice
 #define MAIN_H_
-#define PORT_MOTOR_BACK_LEFT 8
-#define PORT_MOTOR_BACK_RIGHT 6
-#define PORT_MOTOR_FRONT_LEFT 9
-#define PORT_MOTOR_FRONT_RIGHT 7
+#define PORT_MOTOR_BACK_LEFT 7
+#define PORT_MOTOR_BACK_RIGHT 9
+#define PORT_MOTOR_FRONT_LEFT 6
+#define PORT_MOTOR_FRONT_RIGHT 8
 
 #define PORT_ORIENTATION_NORMAL 1
 #define PORT_ORIENTATION_REVERSED -1
@@ -38,11 +38,15 @@
 #define PORT_ORIENTATION_4 PORT_ORIENTATION_NORMAL
 #define PORT_ORIENTATION_5 PORT_ORIENTATION_REVERSED
 #define PORT_ORIENTATION_6 PORT_ORIENTATION_REVERSED
-#define PORT_ORIENTATION_7 PORT_ORIENTATION_REVERSED
+#define PORT_ORIENTATION_7 PORT_ORIENTATION_NORMAL
 #define PORT_ORIENTATION_8 PORT_ORIENTATION_NORMAL
-#define PORT_ORIENTATION_9 PORT_ORIENTATION_NORMAL
+#define PORT_ORIENTATION_9 PORT_ORIENTATION_REVERSED
 #define PORT_ORIENTATION_10 PORT_ORIENTATION_NORMAL
 
+#define LEFT_ENCODER_TOP 2
+#define LEFT_ENCODER_BOTTOM 1
+#define RIGHT_ENCODER_TOP 4
+#define RIGHT_ENCODER_BOTTOM 3
 
 #include <API.h>
 // Allow usage of this file in C++ programs
@@ -54,7 +58,8 @@ extern "C" {
 // actual code. If a function does not match a prototype, compile errors will occur.
 
 // Prototypes for initialization, operator control and autonomous
-
+Encoder leftEncoder;
+Encoder rightEncoder;
 /**
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the

@@ -44,7 +44,7 @@
       autoProcesses();
 	 		processMotors(); // convert the variables to motor commands
 	 		updateScreen();
-	 		delay(20);
+	 		delay(1000);
 	 	}
  }
 
@@ -55,9 +55,9 @@
  void checkSensors()
  {
  	// read the joysticks - they control the motors.
- 	x_input = joystickGetAnalog(1,1);
+ // 	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
- 	angle_input = joystickGetAnalog(1,4);
+ 	angle_input = joystickGetAnalog(1,1);
  }
 
  /**
@@ -66,6 +66,7 @@
  void updateScreen()
  {
  	lcdPrint(uart1, 1, "Go Falcons!");
+  printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
  }
 
  /**

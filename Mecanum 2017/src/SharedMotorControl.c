@@ -91,13 +91,21 @@ int normalizeMotorPower(int power)
 */
 void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
 {
-	int RF_motor_power = normalizeMotorPower(y_motion + x_motion - angle_motion);
- 	int RB_motor_power = normalizeMotorPower(y_motion - x_motion - angle_motion);
- 	int LF_motor_power = normalizeMotorPower(y_motion - x_motion + angle_motion);
- 	int LB_motor_power = normalizeMotorPower(y_motion + x_motion + angle_motion);
 
- 	K_setMotor(PORT_MOTOR_FRONT_LEFT,LF_motor_power);
- 	K_setMotor(PORT_MOTOR_BACK_LEFT,LB_motor_power);
- 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
- 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
+	K_setMotor(PORT_MOTOR_FRONT_LEFT,y_motion+angle_motion/2);
+	K_setMotor(PORT_MOTOR_FRONT_RIGHT,y_motion-angle_motion/2);
+	K_setMotor(PORT_MOTOR_BACK_LEFT,y_motion+angle_motion/2);
+	K_setMotor(PORT_MOTOR_BACK_RIGHT,y_motion-angle_motion/2);
+
+
+ // OLD MECANUM CODE
+	// int RF_motor_power = normalizeMotorPower(y_motion + x_motion - angle_motion);
+ // 	int RB_motor_power = normalizeMotorPower(y_motion - x_motion - angle_motion);
+ // 	int LF_motor_power = normalizeMotorPower(y_motion - x_motion + angle_motion);
+ // 	int LB_motor_power = normalizeMotorPower(y_motion + x_motion + angle_motion);
+	//
+ // 	K_setMotor(PORT_MOTOR_FRONT_LEFT,LF_motor_power);
+ // 	K_setMotor(PORT_MOTOR_BACK_LEFT,LB_motor_power);
+ // 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
+ // 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
 }

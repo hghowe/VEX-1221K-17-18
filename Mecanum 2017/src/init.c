@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
  * VEX Cortex is starting up. As the scheduler is still paused, most API functions will fail.
@@ -36,5 +35,8 @@ void initializeIO() {
  * will not start. An autonomous mode selection menu like the pre_auton() in other environments
  * can be implemented in this task if desired.
  */
-void initialize() {
+void initialize()
+{
+ leftEncoder=encoderInit(LEFT_ENCODER_TOP, LEFT_ENCODER_BOTTOM,true);
+ rightEncoder=encoderInit(RIGHT_ENCODER_TOP,RIGHT_ENCODER_BOTTOM,false);
 }
