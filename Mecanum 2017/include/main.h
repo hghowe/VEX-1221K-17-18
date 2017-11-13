@@ -188,6 +188,13 @@ void allStop();
 void backFull();
 
 /*
+*  moves the robot forward until the average encoder distance is roughly equal
+*   to the target.
+*  @return - whether we have arrived yet.
+*/
+bool driveToTarget(long target);
+
+/*
 *  based on the state of the global variables, update the motors.
 */
 void auton_process_motors();

@@ -11,7 +11,7 @@
  */
 
 #include "main.h"
-
+#include <math.h>
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
@@ -169,6 +169,22 @@ void backFull()
   auto_y_motion = -127;
   auto_angle_motion = 0;
 }
+
+/*
+*  moves the robot forward until the average encoder distance is roughly equal
+*   to the target.
+*  @return - whether we have arrived yet.
+*/
+bool driveToTarget(long target)
+{
+  long avg = (encoderGet(leftEncoder) + encoderGet(rightEncoder))/2;
+  long diff = encoderGet(leftEncoder) - encoderGet(rightEncoder);
+  long error = avg - target;
+  auto_y_motion = int(min(127,-1*error));
+  auto_angle_motion = int(min(127,max(-127,-1*diff)));
+  return (abs(error) > 10);
+}
+
 
 /*
 *  based on the state of the global variables, update the motors.
