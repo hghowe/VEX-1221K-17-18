@@ -91,6 +91,9 @@ int normalizeMotorPower(int power)
 */
 void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
 {
+	// first make sure that y_motion and angle_motion are within (-127,+127)
+	y_motion = normalizeMotorPower(y_motion);
+	angle_motion = normalizeMotorPower(angle_motion);
 
 	K_setMotor(PORT_MOTOR_FRONT_LEFT,y_motion+angle_motion/2);
 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,y_motion-angle_motion/2);
