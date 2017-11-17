@@ -112,3 +112,20 @@ void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
  // 	K_setMotor(PORT_MOTOR_FRONT_RIGHT,RF_motor_power);
  // 	K_setMotor(PORT_MOTOR_BACK_RIGHT,RB_motor_power);
 }
+/**
+* turns on the lift motor to make the lift move in the direction given
+* lift_motion - either up or down
+*/
+void manageLiftMotors(int lift_motion)
+{
+	lift_motion = normalizeMotorPower(lift_motion);
+
+	K_setMotor(PORT_MOTOR_LIFT,lift_motion);
+}
+
+void manageClawMotors(int claw_motion)
+{
+	claw_motion = normalizeMotorPower(claw_motion);
+
+	K_setMotor(PORT_MOTOR_CLAW,claw_motion);
+}

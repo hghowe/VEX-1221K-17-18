@@ -28,6 +28,8 @@
 #define PORT_MOTOR_BACK_RIGHT 9
 #define PORT_MOTOR_FRONT_LEFT 6
 #define PORT_MOTOR_FRONT_RIGHT 8
+#define PORT_MOTOR_LIFT 2
+#define PORT_MOTOR_CLAW 3
 
 #define PORT_ORIENTATION_NORMAL 1
 #define PORT_ORIENTATION_REVERSED -1
@@ -47,6 +49,9 @@
 #define LEFT_ENCODER_BOTTOM 1
 #define RIGHT_ENCODER_TOP 4
 #define RIGHT_ENCODER_BOTTOM 3
+
+#define LIFT_POTENTIOMETER 5
+#define CLAW_POTENTIOMETER 6
 
 #include <API.h>
 // Allow usage of this file in C++ programs
@@ -175,6 +180,13 @@ void processMotors();
 * angle_motion - the rotational "twist" of the robot (-127, 127)
 */
 void manageDriveMotors(int x_motion, int y_motion, int angle_motion);
+bool driveToTarget(long target);
+/**
+* turns on the lift motor to make the lift move in the direction given
+* lift_motion - either up or down
+*/
+void manageLiftMotors(int lift_motion);
+void manageClawMotors(int claw_input);
 
 // -------------------------  Methods in Autonomous --------------------------
 /*

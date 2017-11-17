@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-#include <math.h>
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
@@ -48,15 +47,18 @@ bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 1. all stop
                        false,  // 2. blink
                        false,  // 3. all reverse
-                       false}; // 4. unused....
+                       false}; // 4. drive via encoders
 int timers[][2] = {{0,true},        //0. trigger action 0
                    {500,true},      //1. trigger action 1
                    {250,true},      //2. trigger action 2
                    {1000,true},     //3. trigger action 3
                    {1500,true},     //4. trigger action 1 (!)
-                   {1250,true}};    //5. deactivate trigger 2.
+                   {1250,true},    //5. deactivate trigger 2.
+                   {1255,true}};   //6. activate encoder drive.
+
 int numTimers;
 int numActions;
+bool arrived;
 
 void autonomous()
 {
@@ -102,6 +104,12 @@ void autonomous()
            case 5:
               timers[2][IS_ACTIVE] = false;
               timers[5][IS_ACTIVE] = false;
+           break;
+           case 6:
+              actionStatus[4] = true;
+              encoderReset(leftEncoder);
+              encoderReset(rightEncoder);
+              timers[6][IS_ACTIVE] = false;
          }
        }
      }
@@ -135,6 +143,17 @@ void autonomous()
               backFull();
               actionStatus[3] = false;
            break;
+           case 4: // drive forward via encoders.
+           arrived = driveToTarget(3000); // move forward straight;
+                                                  // when we're @ encoder = 3000,
+                                                  // "arrived" will be true.
+           if (arrived)
+           {
+             actionStatus[4] = false; // deactivate this action; we're done!
+             auto_y_motion = 0;
+             auto_angle_motion =0;
+           }
+           break;
          }
        }
      }
@@ -149,6 +168,8 @@ void autonomous()
   }
 
 }
+
+
 
 /*
 * tell all the drive motors to stop.
@@ -180,9 +201,38 @@ bool driveToTarget(long target)
   long avg = (encoderGet(leftEncoder) + encoderGet(rightEncoder))/2;
   long diff = encoderGet(leftEncoder) - encoderGet(rightEncoder);
   long error = avg - target;
-  auto_y_motion = int(min(127,-1*error));
-  auto_angle_motion = int(min(127,max(-127,-1*diff)));
-  return (abs(error) > 10);
+  auto_y_motion = -1*error;  // forward drive is proportional to error.
+  auto_angle_motion = -1*diff; // turn proportional to angular error.
+
+  return (abs(error) < 10); // say we're there if we get encoder within 10. (?)
+}
+
+bool Arm(int target)
+{
+  int liftPotentiometer = analogRead(LIFT_POTENTIOMETER);
+  if (liftPotentiometer > target)
+  {
+    //make motor go down
+  }
+  if (liftPotentiometer < target)
+  {
+    //make motor go up
+  }
+  return (liftPotentiometer == target);
+}
+
+bool Claw(int target)
+{
+  int clawPotentiometer = analogRead(CLAW_POTENTIOMETER);
+  if (clawPotentiometer > target)
+  {
+    //make claw close
+  }
+  if (clawPotentiometer < target)
+  {
+    //make claw open
+  }
+  return (clawPotentiometer == target);
 }
 
 

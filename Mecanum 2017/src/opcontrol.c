@@ -30,6 +30,8 @@
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
  int x_input, y_input, angle_input;
+ int claw_input;
+ int lift_input;
  long int startTime;
  long int timeSinceStart;
 
@@ -44,7 +46,7 @@
       autoProcesses();
 	 		processMotors(); // convert the variables to motor commands
 	 		updateScreen();
-	 		delay(1000);
+	 		delay(10);
 	 	}
  }
 
@@ -58,6 +60,16 @@
  // 	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,1);
+  lift_input = joystickGetAnalog(1,3);
+if (joystickGetDigital(1, 6, JOY_UP))
+{
+  claw_input = 127;
+}
+if (joystickGetDigital(1, 6, JOY_DOWN))
+{
+  claw_input = -127;
+}
+
  }
 
  /**
@@ -85,5 +97,6 @@
  {
 
   manageDriveMotors(x_input, y_input, angle_input);
-
+  manageLiftMotors(lift_input);
+  manageClawMotors(claw_input);
  }

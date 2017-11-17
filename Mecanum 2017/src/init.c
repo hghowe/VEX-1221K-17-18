@@ -19,9 +19,11 @@
  * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
-void initializeIO() {
+void initializeIO()
+{
+  pinMode(LIFT_POTENTIOMETER, INPUT);
+  pinMode(CLAW_POTENTIOMETER, INPUT);
 }
-
 /*
  * Runs user initialization code. This function will be started in its own task with the default
  * priority and stack size once when the robot is starting up. It is possible that the VEXnet
