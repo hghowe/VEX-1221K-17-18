@@ -32,6 +32,10 @@
  int x_input, y_input, angle_input;
  int claw_input;
  int lift_input;
+ int forearm_input;
+ int low_lift_input;
+ int lift_pot_value;
+ int forearm_pot_value;
  long int startTime;
  long int timeSinceStart;
 
@@ -61,14 +65,52 @@
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,1);
   lift_input = joystickGetAnalog(1,3);
+  forearm_input = joystickGetAnalog(2,2);
+  low_lift_input = joystickGetAnalog(2,3);
+  lift_pot_value = analogRead(LIFT_POTENTIOMETER);
+  forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
 if (joystickGetDigital(1, 6, JOY_UP))
 {
   claw_input = 127;
 }
 if (joystickGetDigital(1, 6, JOY_DOWN))
 {
-  claw_input = -127;
+  claw_input = 50;
 }
+// if (lift_pot_value >= 200)//stops lift from going past its max height
+// {
+//   if (lift_input > 0)
+//   {
+//     lift_input = 0;
+//   }
+// }
+//
+// if (lift_pot_value <= 7)//stops lift from going below its bottom height
+// {
+//   if (lift_input < 0)
+//   {
+//     lift_input = 0;
+//   }
+// }
+
+// if (forearm_pot_value >= )//stops lift from going past its max height
+// {
+//   if (forearm_input > 0)
+//   {
+//     forearm_input = 0;
+//   }
+// }
+//
+// if (forearm_pot_value <= )//stops lift from going past its max height
+// {
+//   if (forearm_input < 0)
+//   {
+//     forearm_input = 0;
+//   }
+// }
+
+
+
 
  }
 
@@ -77,8 +119,8 @@ if (joystickGetDigital(1, 6, JOY_DOWN))
   */
  void updateScreen()
  {
- 	lcdPrint(uart1, 1, "Go Falcons!");
-  printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+ // 	lcdPrint(uart1, 1, "Go Falcons!");
+  // printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
  }
 
  /**
@@ -99,4 +141,5 @@ if (joystickGetDigital(1, 6, JOY_DOWN))
   manageDriveMotors(x_input, y_input, angle_input);
   manageLiftMotors(lift_input);
   manageClawMotors(claw_input);
+  manageForearmMotors(forearm_input);
  }

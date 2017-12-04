@@ -30,6 +30,9 @@
 #define PORT_MOTOR_FRONT_RIGHT 8
 #define PORT_MOTOR_LIFT 2
 #define PORT_MOTOR_CLAW 3
+#define PORT_MOTOR_FOREARM 4
+#define PORT_MOTOR_LOW_LIFT 5
+
 
 #define PORT_ORIENTATION_NORMAL 1
 #define PORT_ORIENTATION_REVERSED -1
@@ -52,6 +55,7 @@
 
 #define LIFT_POTENTIOMETER 5
 #define CLAW_POTENTIOMETER 6
+#define FOREARM_POTENTIOMETER 7
 
 #include <API.h>
 // Allow usage of this file in C++ programs
@@ -187,6 +191,7 @@ bool driveToTarget(long target);
 */
 void manageLiftMotors(int lift_motion);
 void manageClawMotors(int claw_input);
+void manageForearmMotors(int forearm_input);
 
 // -------------------------  Methods in Autonomous --------------------------
 /*

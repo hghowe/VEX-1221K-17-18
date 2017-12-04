@@ -34,6 +34,9 @@
 int auto_x_motion;
 int auto_y_motion;
 int auto_angle_motion;
+int claw_input;
+int lift_input;
+int forearm_input;
 
 // example for the blinking light.
 bool LED_state;
@@ -44,17 +47,19 @@ long startOfAuton;
 
 // Initially, none of these actions will fire...
 bool actionStatus[] = {false,  // 0. ahead full
-                       false,  // 1. all stop
-                       false,  // 2. blink
-                       false,  // 3. all reverse
-                       false}; // 4. drive via encoders
-int timers[][2] = {{0,true},        //0. trigger action 0
-                   {500,true},      //1. trigger action 1
-                   {250,true},      //2. trigger action 2
-                   {1000,true},     //3. trigger action 3
-                   {1500,true},     //4. trigger action 1 (!)
-                   {1250,true},    //5. deactivate trigger 2.
-                   {1255,true}};   //6. activate encoder drive.
+                       false,  // 1. forearm up
+                       false,  // 2. forearm down
+                       false,  // 3. forearm stop
+                       false,  // 4. claw open
+                       false,  // 5. reverse
+                       false}; // 6. stop driving
+int timers[][2] = {{0,true},        //0. activates encoder drive
+                   {250,true},      //1. trigger action 1
+                   {500,true},     //2. trigger action 2
+                   {1250,true},     //3. trigger action 3
+                   {2750,true},     //4. trigger action 4
+                   {3750,true},     //5. trigger action 5
+                   {4500,true}};    //6. trigger action 6
 
 int numTimers;
 int numActions;
@@ -91,22 +96,22 @@ void autonomous()
            break;
            case 2:
               actionStatus[2] = true;
-              timers[2][TRIGGER_TIME] += 500; // try this again in 500 ms.
+              timers[2][IS_ACTIVE] = false;
            break;
            case 3:
               actionStatus[3] = true;
               timers[3][IS_ACTIVE] = false;
            break;
            case 4:
-              actionStatus[2] = true;  //  example - reusing the same action!
+              actionStatus[4] = true;  //  example - reusing the same action!
               timers[4][IS_ACTIVE] = false;
            break;
            case 5:
-              timers[2][IS_ACTIVE] = false;
+              actionStatus[5] = true;
               timers[5][IS_ACTIVE] = false;
            break;
            case 6:
-              actionStatus[4] = true;
+              actionStatus[6] = true;
               encoderReset(leftEncoder);
               encoderReset(rightEncoder);
               timers[6][IS_ACTIVE] = false;
@@ -124,39 +129,48 @@ void autonomous()
          {
            case 0:  // all ahead full....
              // this is an example of writing the code in the case....
-             auto_x_motion = 127;
-             auto_y_motion = 0;
-             auto_angle_motion = 0;
+             arrived = driveToTarget(1500);
+
+             if (arrived)
+             {
+               actionStatus[0] = false; // deactivate this action; we're done!
+               auto_y_motion = 0;
+               auto_angle_motion =0;
+             }
+             break;
              actionStatus[0] = false;
            break;
            case 1:  // all stop.
              // this is an example of delegating the code to a reusable method.
-             allStop();
+             lift_input = 127;
              actionStatus[1] = false;
            break;
            case 2: // toggle the LED
              // if LED_state was true, make it false, or vice versa.
-             LED_state = ! LED_state;
+             lift_input = -127;
              actionStatus[2] = false;
            break;
            case 3: // reverse
-              backFull();
+              lift_input = 0;
               actionStatus[3] = false;
            break;
            case 4: // drive forward via encoders.
-           arrived = driveToTarget(3000); // move forward straight;
-                                                  // when we're @ encoder = 3000,
-                                                  // "arrived" will be true.
-           if (arrived)
-           {
-             actionStatus[4] = false; // deactivate this action; we're done!
-             auto_y_motion = 0;
-             auto_angle_motion =0;
-           }
+           claw_input = 50; // move forward straight;
+           actionStatus[4] = false;
+           break;
+           case 5:
+           backFull();
+           actionStatus[5] = false;
+           break;
+           case 6:
+           allStop();
+           actionStatus[6] = false;
            break;
          }
        }
      }
+                                                  // when we're @ encoder = 3000,
+                                                  // "arrived" will be true.
 
 
      auton_process_motors();
@@ -207,7 +221,7 @@ bool driveToTarget(long target)
   return (abs(error) < 10); // say we're there if we get encoder within 10. (?)
 }
 
-bool Arm(int target)
+bool Lift(int target)
 {
   int liftPotentiometer = analogRead(LIFT_POTENTIOMETER);
   if (liftPotentiometer > target)
@@ -235,6 +249,20 @@ bool Claw(int target)
   return (clawPotentiometer == target);
 }
 
+bool Forearm(int target)
+{
+  int forearmPotentiometer = analogRead(FOREARM_POTENTIOMETER);
+  if (forearmPotentiometer > target)
+  {
+    //make forearm go down
+  }
+  if (forearmPotentiometer < target)
+  {
+    //make forearm fo up
+  }
+  return (forearmPotentiometer == target);
+}
+
 
 /*
 *  based on the state of the global variables, update the motors.
@@ -243,7 +271,8 @@ void auton_process_motors()
 {
    // tell the chassis how to drive...
    manageDriveMotors(auto_x_motion, auto_y_motion, auto_angle_motion);
-
+   manageClawMotors(claw_input);
+   manageForearmMotors(forearm_input);
    // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
    digitalWrite(3,LED_state);
 }

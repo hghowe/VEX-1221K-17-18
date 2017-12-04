@@ -21,8 +21,9 @@
  */
 void initializeIO()
 {
-  pinMode(LIFT_POTENTIOMETER, INPUT);
-  pinMode(CLAW_POTENTIOMETER, INPUT);
+  pinMode(LIFT_POTENTIOMETER, INPUT_ANALOG);
+  pinMode(CLAW_POTENTIOMETER, INPUT_ANALOG);
+  pinMode(FOREARM_POTENTIOMETER, INPUT_ANALOG);
 }
 /*
  * Runs user initialization code. This function will be started in its own task with the default

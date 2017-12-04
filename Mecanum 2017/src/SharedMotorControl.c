@@ -95,8 +95,8 @@ void manageDriveMotors(int x_motion, int y_motion, int angle_motion)
 	y_motion = normalizeMotorPower(y_motion);
 	angle_motion = normalizeMotorPower(angle_motion);
 
-	K_setMotor(PORT_MOTOR_FRONT_LEFT,y_motion+angle_motion/2);
-	K_setMotor(PORT_MOTOR_FRONT_RIGHT,y_motion-angle_motion/2);
+	// K_setMotor(PORT_MOTOR_FRONT_LEFT,y_motion+angle_motion/2);
+	// K_setMotor(PORT_MOTOR_FRONT_RIGHT,y_motion-angle_motion/2);
 	K_setMotor(PORT_MOTOR_BACK_LEFT,y_motion+angle_motion/2);
 	K_setMotor(PORT_MOTOR_BACK_RIGHT,y_motion-angle_motion/2);
 
@@ -123,9 +123,23 @@ void manageLiftMotors(int lift_motion)
 	K_setMotor(PORT_MOTOR_LIFT,lift_motion);
 }
 
+void manageLowLiftMotors(int low_lift_motion)
+{
+	low_lift_motion = normalizeMotorPower(low_lift_motion);
+
+	K_setMotor(PORT_MOTOR_LOW_LIFT,low_lift_motion);
+}
+
 void manageClawMotors(int claw_motion)
 {
 	claw_motion = normalizeMotorPower(claw_motion);
 
 	K_setMotor(PORT_MOTOR_CLAW,claw_motion);
+}
+
+void manageForearmMotors(int forearm_motion)
+{
+	forearm_motion = normalizeMotorPower(forearm_motion);
+
+	K_setMotor(PORT_MOTOR_FOREARM,forearm_motion);
 }
