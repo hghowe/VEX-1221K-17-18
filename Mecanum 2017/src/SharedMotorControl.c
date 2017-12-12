@@ -143,3 +143,9 @@ void manageForearmMotors(int forearm_motion)
 
 	K_setMotor(PORT_MOTOR_FOREARM,forearm_motion);
 }
+
+void manageLowLiftMotors(int low_lift_motion)
+{
+	low_lift_motion = normalizeMotorPower(low_lift_motion);
+	K_setMotor(PORT_MOTOR_LOW_LIFT,low_lift_motion);
+}

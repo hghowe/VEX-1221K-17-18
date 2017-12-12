@@ -142,4 +142,5 @@ if (joystickGetDigital(1, 6, JOY_DOWN))
   manageLiftMotors(lift_input);
   manageClawMotors(claw_input);
   manageForearmMotors(forearm_input);
+  manageLowLiftMotors(low_lift_input);
  }

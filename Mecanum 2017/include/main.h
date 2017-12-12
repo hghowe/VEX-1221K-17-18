@@ -192,6 +192,7 @@ bool driveToTarget(long target);
 void manageLiftMotors(int lift_motion);
 void manageClawMotors(int claw_input);
 void manageForearmMotors(int forearm_input);
+void manageLowLiftMotors(int low_lift_input);
 
 // -------------------------  Methods in Autonomous --------------------------
 /*
