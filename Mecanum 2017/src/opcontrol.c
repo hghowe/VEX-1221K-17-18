@@ -64,8 +64,8 @@
  // 	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,1);
-  lift_input = joystickGetAnalog(1,3);
-  forearm_input = joystickGetAnalog(2,2);
+  lift_input = joystickGetAnalog(2,2);
+  forearm_input = -joystickGetAnalog(1,3);
   low_lift_input = joystickGetAnalog(2,3);
   lift_pot_value = analogRead(LIFT_POTENTIOMETER);
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
@@ -75,39 +75,28 @@ if (joystickGetDigital(1, 6, JOY_UP))
 }
 if (joystickGetDigital(1, 6, JOY_DOWN))
 {
-  claw_input = 50;
+  claw_input = -127;
 }
-// if (lift_pot_value >= 200)//stops lift from going past its max height
-// {
-//   if (lift_input > 0)
-//   {
-//     lift_input = 0;
-//   }
-// }
-//
-// if (lift_pot_value <= 7)//stops lift from going below its bottom height
-// {
-//   if (lift_input < 0)
-//   {
-//     lift_input = 0;
-//   }
-// }
+// LIFT_SAFETY SECTION
+if (lift_input>0 && lift_pot_value > 2400)//stops lift from going past its highest position
+{
+    lift_input = 0;
+}
 
-// if (forearm_pot_value >= )//stops lift from going past its max height
-// {
-//   if (forearm_input > 0)
-//   {
-//     forearm_input = 0;
-//   }
-// }
-//
-// if (forearm_pot_value <= )//stops lift from going past its max height
-// {
-//   if (forearm_input < 0)
-//   {
-//     forearm_input = 0;
-//   }
-// }
+if  (lift_input<0 && lift_pot_value <  850)//stops lift from going past its lowest position
+{
+    lift_input = 0;
+}
+// FOREARM_SAFETY SECTION
+if (forearm_input < 0 && forearm_pot_value > 3700)//stops forearm from going past its highest position
+{
+    forearm_input = 0;
+}
+
+if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going past its lowest position
+{
+    forearm_input = 0;
+}
 
 
 

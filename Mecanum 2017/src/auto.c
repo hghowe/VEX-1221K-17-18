@@ -53,13 +53,13 @@ bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 4. claw open
                        false,  // 5. reverse
                        false}; // 6. stop driving
-int timers[][2] = {{0,true},        //0. activates encoder drive
-                   {250,true},      //1. trigger action 1
-                   {500,true},     //2. trigger action 2
-                   {1250,true},     //3. trigger action 3
-                   {2750,true},     //4. trigger action 4
-                   {3750,true},     //5. trigger action 5
-                   {4500,true}};    //6. trigger action 6
+int timers[][2] = {{0,false},        //0. activates encoder drive
+                   {250,false},      //1. trigger action 1
+                   {500,false},     //2. trigger action 2
+                   {1250,false},     //3. trigger action 3
+                   {2750,false},     //4. trigger action 4
+                   {3750,false},     //5. trigger action 5
+                   {4500,false}};    //6. trigger action 6
 
 int numTimers;
 int numActions;
@@ -235,19 +235,19 @@ bool Lift(int target)
   return (liftPotentiometer == target);
 }
 
-bool Claw(int target)
-{
-  int clawPotentiometer = analogRead(CLAW_POTENTIOMETER);
-  if (clawPotentiometer > target)
-  {
-    //make claw close
-  }
-  if (clawPotentiometer < target)
-  {
-    //make claw open
-  }
-  return (clawPotentiometer == target);
-}
+// bool Claw(int target)
+// {
+//   int clawPotentiometer = analogRead(CLAW_POTENTIOMETER);
+//   if (clawPotentiometer > target)
+//   {
+//     //make claw close
+//   }
+//   if (clawPotentiometer < target)
+//   {
+//     //make claw open
+//   }
+//   return (clawPotentiometer == target);
+// }
 
 bool Forearm(int target)
 {

@@ -31,7 +31,8 @@
 #define PORT_MOTOR_LIFT 2
 #define PORT_MOTOR_CLAW 3
 #define PORT_MOTOR_FOREARM 4
-#define PORT_MOTOR_LOW_LIFT 5
+#define PORT_MOTOR_LOW_LIFT_RIGHT 1
+#define PORT_MOTOR_LOW_LIFT_LEFT 10
 
 
 #define PORT_ORIENTATION_NORMAL 1
@@ -54,8 +55,11 @@
 #define RIGHT_ENCODER_BOTTOM 3
 
 #define LIFT_POTENTIOMETER 5
-#define CLAW_POTENTIOMETER 6
 #define FOREARM_POTENTIOMETER 7
+#define forearm_max 2400
+#define forearm_least
+#define lift_max 3700
+#define lift_least 600
 
 #include <API.h>
 // Allow usage of this file in C++ programs

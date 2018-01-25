@@ -127,7 +127,8 @@ void manageLowLiftMotors(int low_lift_motion)
 {
 	low_lift_motion = normalizeMotorPower(low_lift_motion);
 
-	K_setMotor(PORT_MOTOR_LOW_LIFT,low_lift_motion);
+	K_setMotor(PORT_MOTOR_LOW_LIFT_LEFT,low_lift_motion);
+	K_setMotor(PORT_MOTOR_LOW_LIFT_RIGHT,low_lift_motion);
 }
 
 void manageClawMotors(int claw_motion)
