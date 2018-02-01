@@ -71,19 +71,21 @@
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
 if (joystickGetDigital(1, 6, JOY_UP))
 {
-  claw_input = 127;
+  claw_input = 30;
 }
 if (joystickGetDigital(1, 6, JOY_DOWN))
 {
   claw_input = -127;
 }
 // LIFT_SAFETY SECTION
-if (lift_input>0 && lift_pot_value > 2400)//stops lift from going past its highest position
+//1710-20 Max height
+//3180-90 Min height
+if (lift_input>0 && lift_pot_value > 3190)//stops lift from going past its highest position
 {
     lift_input = 0;
 }
 
-if  (lift_input<0 && lift_pot_value <  850)//stops lift from going past its lowest position
+if  (lift_input<0 && lift_pot_value <  1720)//stops lift from going past its lowest position
 {
     lift_input = 0;
 }

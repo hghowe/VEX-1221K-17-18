@@ -58,8 +58,10 @@
 #define FOREARM_POTENTIOMETER 7
 #define forearm_max 2400
 #define forearm_least
-#define lift_max 3700
-#define lift_least 600
+#define lift_max 1720
+#define lift_least 3190
+//1710-20 Max height
+//3180-90 Min height
 
 #include <API.h>
 // Allow usage of this file in C++ programs
