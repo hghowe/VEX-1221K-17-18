@@ -114,8 +114,14 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
  {
    if (LCD_ACTIVE)
    {
-     	lcdPrint(uart1, 1, "Go Falcons!");
-      printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+     char topString[16];
+     char bottomString[16];
+     snprintf(topString, 16, "L: %d",encoderGet(leftEncoder));
+     snprintf(bottomString, 16, "R: %d",encoderGet(rightEncoder));
+     lcdSetText(uart1, 1, topString);
+     lcdSetText(uart1, 2, bottomString);
+     	//lcdPrint(uart1, 1, "Go Falcons!");
+      //printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
    }
  }
 
