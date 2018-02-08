@@ -65,7 +65,7 @@
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,1);
   lift_input = joystickGetAnalog(2,2);
-  forearm_input = -joystickGetAnalog(1,3);
+  forearm_input = joystickGetAnalog(1,3);
   low_lift_input = joystickGetAnalog(2,3);
   lift_pot_value = analogRead(LIFT_POTENTIOMETER);
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
@@ -80,6 +80,7 @@ if (joystickGetDigital(1, 6, JOY_DOWN))
 // LIFT_SAFETY SECTION
 //1710-20 Max height
 //3180-90 Min height
+/*
 if (lift_input>0 && lift_pot_value > 3190)//stops lift from going past its highest position
 {
     lift_input = 0;
@@ -89,6 +90,7 @@ if  (lift_input<0 && lift_pot_value <  1720)//stops lift from going past its low
 {
     lift_input = 0;
 }
+*/
 // FOREARM_SAFETY SECTION
 if (forearm_input < 0 && forearm_pot_value > 3700)//stops forearm from going past its highest position
 {
@@ -110,8 +112,11 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
   */
  void updateScreen()
  {
- // 	lcdPrint(uart1, 1, "Go Falcons!");
-  // printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+   if (LCD_ACTIVE)
+   {
+     	lcdPrint(uart1, 1, "Go Falcons!");
+      printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+   }
  }
 
  /**

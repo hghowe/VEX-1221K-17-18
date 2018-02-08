@@ -42,4 +42,10 @@ void initialize()
 {
  leftEncoder=encoderInit(LEFT_ENCODER_TOP, LEFT_ENCODER_BOTTOM,true);
  rightEncoder=encoderInit(RIGHT_ENCODER_TOP,RIGHT_ENCODER_BOTTOM,false);
+
+ if (LCD_ACTIVE)
+ {
+   lcdInit(uart1);
+ 	 lcdClear(uart1);
+ }
 }

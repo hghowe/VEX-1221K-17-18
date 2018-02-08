@@ -63,6 +63,8 @@
 //1710-20 Max height
 //3180-90 Min height
 
+#define LCD_ACTIVE true
+
 #include <API.h>
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
