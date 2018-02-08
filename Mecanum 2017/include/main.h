@@ -225,8 +225,10 @@ bool driveToTarget(long target);
 */
 void auton_process_motors();
 
-
-
+/*
+* draw information on the LCD screen in auton mode.
+*/
+void updateScreenAutonomous();
 
 
 

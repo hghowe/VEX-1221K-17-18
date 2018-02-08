@@ -172,7 +172,10 @@ void autonomous()
                                                   // when we're @ encoder = 3000,
                                                   // "arrived" will be true.
 
-
+     if (LCD_ACTIVE)
+     {
+         updateScreenAutonomous();
+     }
      auton_process_motors();
      delay(1);
      // probably unneccesary, but if we aren't in auton mode but we are here somehow,
@@ -275,4 +278,10 @@ void auton_process_motors()
    manageForearmMotors(forearm_input);
    // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
    digitalWrite(3,LED_state);
+}
+
+void updateScreenAutonomous()
+{
+  lcdPrint(uart1, 1, "Go Falcons!");
+  //printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
 }
