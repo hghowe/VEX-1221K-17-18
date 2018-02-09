@@ -45,6 +45,8 @@ bool LED_state;
 long timeSinceStart;
 long startOfAuton;
 
+int message = 0;
+
 // Initially, none of these actions will fire...
 bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 1. forearm up
@@ -53,8 +55,8 @@ bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 4. claw open
                        false,  // 5. reverse
                        false}; // 6. stop driving
-int timers[][2] = {{0,false},        //0. activates encoder drive
-                   {250,false},      //1. trigger action 1
+int timers[][2] = {{0,true},        //0. activates encoder drive
+                   {1000,true},      //1. trigger action 1
                    {500,false},     //2. trigger action 2
                    {1250,false},     //3. trigger action 3
                    {2750,false},     //4. trigger action 4
@@ -77,7 +79,7 @@ void autonomous()
   while(true)
   {
     timeSinceStart = millis() - startOfAuton;
-
+    // message = 0;
     // loop through all the timers....
     for (int i = 0; i<numTimers; i++)
     {
@@ -86,35 +88,15 @@ void autonomous()
        {
          switch (i) // decide which "case" to do based on the value of "i"
          {
-           case 0:
-              actionStatus[0] = true;
-              timers[0][IS_ACTIVE]= false;   // a one-time trigger.
+           case 0: // close the claw
+              claw_input = CLAW_CLOSED;
+              deactivateTimer(0); // ok, we've done this don't trigger it again.
+           break;
+           case 1: // lift arm
+              activateAction(0);
+              deactivateTimer(1);   // a one-time trigger.
             break;
-           case 1:
-              actionStatus[1] = true;
-              timers[1][IS_ACTIVE] = false;   // a one-time trigger.
-           break;
-           case 2:
-              actionStatus[2] = true;
-              timers[2][IS_ACTIVE] = false;
-           break;
-           case 3:
-              actionStatus[3] = true;
-              timers[3][IS_ACTIVE] = false;
-           break;
-           case 4:
-              actionStatus[4] = true;  //  example - reusing the same action!
-              timers[4][IS_ACTIVE] = false;
-           break;
-           case 5:
-              actionStatus[5] = true;
-              timers[5][IS_ACTIVE] = false;
-           break;
-           case 6:
-              actionStatus[6] = true;
-              encoderReset(leftEncoder);
-              encoderReset(rightEncoder);
-              timers[6][IS_ACTIVE] = false;
+          
          }
        }
      }
@@ -129,43 +111,15 @@ void autonomous()
          {
            case 0:  // all ahead full....
              // this is an example of writing the code in the case....
-             arrived = driveToTarget(1500);
-
+             arrived = armToTarget(1670);
+             message = analogRead(FOREARM_POTENTIOMETER);
              if (arrived)
              {
-               actionStatus[0] = false; // deactivate this action; we're done!
-               auto_y_motion = 0;
-               auto_angle_motion =0;
+               deactivateAction(0);  //we're done!
+               forearm_input = 0;
              }
-             break;
-             actionStatus[0] = false;
            break;
-           case 1:  // all stop.
-             // this is an example of delegating the code to a reusable method.
-             lift_input = 127;
-             actionStatus[1] = false;
-           break;
-           case 2: // toggle the LED
-             // if LED_state was true, make it false, or vice versa.
-             lift_input = -127;
-             actionStatus[2] = false;
-           break;
-           case 3: // reverse
-              lift_input = 0;
-              actionStatus[3] = false;
-           break;
-           case 4: // drive forward via encoders.
-           claw_input = 50; // move forward straight;
-           actionStatus[4] = false;
-           break;
-           case 5:
-           backFull();
-           actionStatus[5] = false;
-           break;
-           case 6:
-           allStop();
-           actionStatus[6] = false;
-           break;
+
          }
        }
      }
@@ -238,6 +192,14 @@ bool Lift(int target)
   return (liftPotentiometer == target);
 }
 
+bool armToTarget(int target)
+{
+  int armPotentiometer = analogRead(FOREARM_POTENTIOMETER);
+  int error = target - armPotentiometer;
+  forearm_input = -3* error;
+  return abs(error) < 10;
+}
+
 // bool Claw(int target)
 // {
 //   int clawPotentiometer = analogRead(CLAW_POTENTIOMETER);
@@ -282,6 +244,32 @@ void auton_process_motors()
 
 void updateScreenAutonomous()
 {
-  lcdPrint(uart1, 1, "Go Falcons!");
+
+  char topString[16];
+  char bottomString[16];
+  snprintf(topString, 16, "status:%d ",message); // combine string with a variable
+  //snprintf(bottomString, 16, "Lf:%d arm:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
+  lcdSetText(uart1, 1, topString);
+  // lcdPrint(uart1, 1, "Go Falcons!");
   //printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+}
+
+void activateAction(int which)
+{
+  actionStatus[which] = true;
+}
+
+void deactivateAction(int which)
+{
+  actionStatus[which] = false;
+}
+
+void activateTimer(int which)
+{
+  timers[which][IS_ACTIVE]  = true;
+}
+
+void deactivateTimer(int which)
+{
+  timers[which][IS_ACTIVE] = false;
 }

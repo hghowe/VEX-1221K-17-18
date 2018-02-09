@@ -63,6 +63,9 @@
 //1710-20 Max height
 //3180-90 Min height
 
+#define CLAW_OPEN 30
+#define CLAW_CLOSED -127
+
 #define LCD_ACTIVE true
 
 #include <API.h>
@@ -221,6 +224,12 @@ void backFull();
 bool driveToTarget(long target);
 
 /*
+* moves the forearm to make its pot match the target. Returns true when it arrives.
+*/
+bool armToTarget(int target);
+
+
+/*
 *  based on the state of the global variables, update the motors.
 */
 void auton_process_motors();
@@ -230,7 +239,13 @@ void auton_process_motors();
 */
 void updateScreenAutonomous();
 
-
+/*
+* convenience methods to activate/deactivate timers and actions
+*/
+void activateAction(int which);
+void deactivateAction(int which);
+void activateTimer(int which);
+void deactivateTimer(int which);
 
 // End C++ export structure
 #ifdef __cplusplus

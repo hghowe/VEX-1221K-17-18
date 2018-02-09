@@ -71,11 +71,11 @@
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
 if (joystickGetDigital(1, 6, JOY_UP))
 {
-  claw_input = 30;
+  claw_input = CLAW_OPEN;
 }
 if (joystickGetDigital(1, 6, JOY_DOWN))
 {
-  claw_input = -127;
+  claw_input = CLAW_CLOSED;
 }
 // LIFT_SAFETY SECTION
 //1710-20 Max height
@@ -117,7 +117,7 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
      char topString[16];
      char bottomString[16];
      snprintf(topString, 16, "L:%d R:%d",encoderGet(leftEncoder),encoderGet(rightEncoder)); // combine string with a variable
-     snprintf(bottomString, 16, "Lf:%d arm:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
+     snprintf(bottomString, 16, "Lf:%d a:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
      lcdSetText(uart1, 1, topString);
      lcdSetText(uart1, 2, bottomString);
      	//lcdPrint(uart1, 1, "Go Falcons!"); //lcdPrint is ok if you don't have formatting.
