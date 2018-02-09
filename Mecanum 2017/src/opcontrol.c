@@ -116,12 +116,12 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
    {
      char topString[16];
      char bottomString[16];
-     snprintf(topString, 16, "L: %d",encoderGet(leftEncoder));
-     snprintf(bottomString, 16, "R: %d",encoderGet(rightEncoder));
+     snprintf(topString, 16, "L:%d R:%d",encoderGet(leftEncoder),encoderGet(rightEncoder)); // combine string with a variable
+     snprintf(bottomString, 16, "Lf:%d arm:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
      lcdSetText(uart1, 1, topString);
      lcdSetText(uart1, 2, bottomString);
-     	//lcdPrint(uart1, 1, "Go Falcons!");
-      //printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder));
+     	//lcdPrint(uart1, 1, "Go Falcons!"); //lcdPrint is ok if you don't have formatting.
+      //printf("Encoders Are: %d, %d\n",encoderGet(leftEncoder), encoderGet(rightEncoder)); // this would print to serial port - to the computer via orange cable.
    }
  }
 
