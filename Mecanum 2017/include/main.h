@@ -54,6 +54,10 @@
 #define RIGHT_ENCODER_TOP 4
 #define RIGHT_ENCODER_BOTTOM 3
 
+
+//digital section
+#define LOWLIFT_SWITCH_OUT 5
+
 #define LIFT_POTENTIOMETER 5
 #define FOREARM_POTENTIOMETER 7
 #define forearm_max 2400
@@ -222,12 +226,18 @@ void backFull();
 *  @return - whether we have arrived yet.
 */
 bool driveToTarget(long target);
+bool turnToTarget(long target);
 
 /*
 * moves the forearm to make its pot match the target. Returns true when it arrives.
 */
 bool armToTarget(int target);
 
+/*
+* moves the main lift to make its pot match the target, returns true when arrived at target.
+*/
+
+bool liftToTarget(int target);
 
 /*
 *  based on the state of the global variables, update the motors.

@@ -55,10 +55,10 @@ bool actionStatus[] = {false,  // 0. ahead full
                        false,  // 4. claw open
                        false,  // 5. reverse
                        false}; // 6. stop driving
-int timers[][2] = {{0,true},        //0. activates encoder drive
+int timers[][4] = {{0,true},        //0. activates encoder drive
                    {1000,true},      //1. trigger action 1
-                   {500,false},     //2. trigger action 2
-                   {1250,false},     //3. trigger action 3
+                   {3000,true},     //2. trigger action 2
+                   {5000,true},     //3. trigger action 3
                    {2750,false},     //4. trigger action 4
                    {3750,false},     //5. trigger action 5
                    {4500,false}};    //6. trigger action 6
@@ -96,10 +96,19 @@ void autonomous()
               activateAction(0);
               deactivateTimer(1);   // a one-time trigger.
             break;
-          
+            case 2:
+              activateAction(1);
+              deactivateTimer(2);
+            break;
+            case 3:
+              activateAction(2);
+              deactivateTimer(3);
+            break;
+
          }
        }
      }
+
 
      // loop through all the actions....
      for (int i = 0; i<numActions; i++)
@@ -119,6 +128,28 @@ void autonomous()
                forearm_input = 0;
              }
            break;
+           case 1:
+            arrived = driveToTarget(300);
+            message = analogRead(encoderGet(leftEncoder));
+            if (arrived)
+            {
+              deactivateAction(1);
+              auto_y_motion = 0;
+            }
+            break;
+            case 2:
+              arrived = turnToTarget(236);
+              message = analogRead(encoderGet(rightEncoder));
+            if (arrived)
+            {
+              deactivateAction(2);
+              auto_angle_motion = 0;
+            }
+            break;
+            //case 3:
+              //arrived = liftToTarget(2700);
+
+            //break;
 
          }
        }
@@ -178,9 +209,20 @@ bool driveToTarget(long target)
   return (abs(error) < 10); // say we're there if we get encoder within 10. (?)
 }
 
-bool Lift(int target)
+bool turnToTarget(long target)
+{
+  long diff = encoderGet(leftEncoder) - encoderGet(rightEncoder);
+  long error = diff - target;
+
+  auto_angle_motion = -1*error;
+
+  return (abs(error) <10);
+}
+
+bool liftToTarget(int target)
 {
   int liftPotentiometer = analogRead(LIFT_POTENTIOMETER);
+
   if (liftPotentiometer > target)
   {
     //make motor go down
