@@ -59,9 +59,9 @@ int timers[][4] = {{0,true},        //0. activates encoder drive
                    {1000,true},      //1. trigger action 1
                    {3000,true},     //2. trigger action 2
                    {5000,true},     //3. trigger action 3
-                   {2750,false},     //4. trigger action 4
-                   {3750,false},     //5. trigger action 5
-                   {4500,false}};    //6. trigger action 6
+                   {7050,true},     //4. trigger action 4
+                   {9000,true},     //5. trigger action 5
+                   {10000,true}};    //6. trigger action 6
 
 int numTimers;
 int numActions;
@@ -102,7 +102,22 @@ void autonomous()
             break;
             case 3:
               activateAction(2);
+              //activateAction(3);
               deactivateTimer(3);
+            break;
+            case 4:
+              encoderReset(leftEncoder);
+              encoderReset(rightEncoder);
+              activateAction(3);
+              activateAction(4);
+              deactivateTimer(4);
+            break;
+            case 5:
+              activateAction(5);
+              deactivateTimer(5);
+            break;
+            case 6:
+              claw_input = CLAW_OPEN;
             break;
 
          }
@@ -120,6 +135,7 @@ void autonomous()
          {
            case 0:  // all ahead full....
              // this is an example of writing the code in the case....
+             //how far forearm will lift when this action is called
              arrived = armToTarget(1670);
              message = analogRead(FOREARM_POTENTIOMETER);
              if (arrived)
@@ -129,6 +145,7 @@ void autonomous()
              }
            break;
            case 1:
+           //how far it drives (p1)
             arrived = driveToTarget(300);
             message = analogRead(encoderGet(leftEncoder));
             if (arrived)
@@ -138,7 +155,8 @@ void autonomous()
             }
             break;
             case 2:
-              arrived = turnToTarget(236);
+            //how far it turns
+              arrived = turnToTarget(250);
               message = analogRead(encoderGet(rightEncoder));
             if (arrived)
             {
@@ -146,10 +164,40 @@ void autonomous()
               auto_angle_motion = 0;
             }
             break;
-            //case 3:
-              //arrived = liftToTarget(2700);
+            case 3:
+            //amount of lift
+              arrived = liftToTarget(2800);
+              message = analogRead(LIFT_POTENTIOMETER);
+            if (arrived)
+            {
+              deactivateAction(3);
+              lift_input = 0;
+            }
 
-            //break;
+            break;
+            case 4:
+            //drives to pole with scone
+              arrived = driveToTarget(300);
+              message = analogRead(encoderGet(rightEncoder));
+            if (arrived)
+            {
+              deactivateAction(4);
+              auto_y_motion = 0;
+            }
+            break;
+
+            case 5:
+            //lifts again
+              arrived = liftToTarget(3235);
+              message = analogRead(LIFT_POTENTIOMETER);
+            if (arrived)
+            {
+              deactivateAction(3);
+              lift_input = 0;
+            }
+
+            break;
+
 
          }
        }
@@ -222,16 +270,10 @@ bool turnToTarget(long target)
 bool liftToTarget(int target)
 {
   int liftPotentiometer = analogRead(LIFT_POTENTIOMETER);
-
-  if (liftPotentiometer > target)
-  {
-    //make motor go down
-  }
-  if (liftPotentiometer < target)
-  {
-    //make motor go up
-  }
-  return (liftPotentiometer == target);
+  int error = target - liftPotentiometer;
+  //make this error smaller
+  lift_input = -3* error;
+  return abs(error) <10;
 }
 
 bool armToTarget(int target)
@@ -256,19 +298,6 @@ bool armToTarget(int target)
 //   return (clawPotentiometer == target);
 // }
 
-bool Forearm(int target)
-{
-  int forearmPotentiometer = analogRead(FOREARM_POTENTIOMETER);
-  if (forearmPotentiometer > target)
-  {
-    //make forearm go down
-  }
-  if (forearmPotentiometer < target)
-  {
-    //make forearm fo up
-  }
-  return (forearmPotentiometer == target);
-}
 
 
 /*
@@ -280,6 +309,7 @@ void auton_process_motors()
    manageDriveMotors(auto_x_motion, auto_y_motion, auto_angle_motion);
    manageClawMotors(claw_input);
    manageForearmMotors(forearm_input);
+   manageLiftMotors(lift_input);
    // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
    digitalWrite(3,LED_state);
 }
