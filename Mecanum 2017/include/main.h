@@ -56,7 +56,8 @@
 
 
 //digital section
-#define LOWLIFT_SWITCH_OUT 5
+#define LOWLIFT_SWITCH_OUT 6
+#define LOWLIFT_SWITCH_IN 5
 
 #define LIFT_POTENTIOMETER 5
 #define FOREARM_POTENTIOMETER 7
@@ -107,6 +108,9 @@ void autonomous();
  * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
+ void auton1();
+void autonomous2();
+
 void initializeIO();
 /**
  * Runs user initialization code. This function will be started in its own task with the default

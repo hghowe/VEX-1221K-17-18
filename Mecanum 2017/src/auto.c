@@ -63,14 +63,29 @@ int timers[][4] = {{0,true},        //0. activates encoder drive
                    {9000,true},     //5. trigger action 5
                    {10000,true}};    //6. trigger action 6
 
+int timers2[][4] = {{0,true},        //0. activates encoder drive
+                   {1000,true},      //1. trigger action 1
+                   {3000,true},     //2. trigger action 2
+                   {5000,true},     //3. trigger action 3
+                   {7050,true},     //4. trigger action 4
+                   {9000,true},     //5. trigger action 5
+                   {10000,true}};    //6. trigger action 6
+
 int numTimers;
 int numActions;
 bool arrived;
 
 void autonomous()
 {
-  startOfAuton = millis();
 
+    auton1();
+
+  //  autonomous2();
+}
+
+void auton1()
+{
+  startOfAuton = millis();
   // calculate num items in the arrays - the memory usage of the array
   //       divided by the memory usage of each item. <-- an old "C" trick.
   numTimers = sizeof(timers)/sizeof(timers[0]);
@@ -113,11 +128,12 @@ void autonomous()
               deactivateTimer(4);
             break;
             case 5:
-              activateAction(5);
+              claw_input = CLAW_OPEN;
+              //activateAction(5);
               deactivateTimer(5);
             break;
             case 6:
-              claw_input = CLAW_OPEN;
+              //claw_input = CLAW_OPEN;
             break;
 
          }
@@ -146,7 +162,7 @@ void autonomous()
            break;
            case 1:
            //how far it drives (p1)
-            arrived = driveToTarget(300);
+            arrived = driveToTarget(200);
             message = analogRead(encoderGet(leftEncoder));
             if (arrived)
             {
@@ -156,7 +172,7 @@ void autonomous()
             break;
             case 2:
             //how far it turns
-              arrived = turnToTarget(250);
+              arrived = turnToTarget(360);
               message = analogRead(encoderGet(rightEncoder));
             if (arrived)
             {
@@ -166,7 +182,7 @@ void autonomous()
             break;
             case 3:
             //amount of lift
-              arrived = liftToTarget(2800);
+              arrived = liftToTarget(3000);
               message = analogRead(LIFT_POTENTIOMETER);
             if (arrived)
             {
@@ -188,11 +204,164 @@ void autonomous()
 
             case 5:
             //lifts again
-              arrived = liftToTarget(3235);
+              arrived = liftToTarget(2800);
+              message = analogRead(LIFT_POTENTIOMETER);
+            if (arrived)
+            {
+              deactivateAction(5);
+              lift_input = 0;
+            }
+
+            break;
+
+
+         }
+       }
+     }
+                                                  // when we're @ encoder = 3000,
+                                                  // "arrived" will be true.
+
+     if (LCD_ACTIVE)
+     {
+         updateScreenAutonomous();
+     }
+     auton_process_motors();
+     delay(1);
+     // probably unneccesary, but if we aren't in auton mode but we are here somehow,
+     //       lets leave this loop!
+     if (!isAutonomous())
+      break;
+  }
+
+}
+
+void autonomous2()
+{
+  startOfAuton = millis();
+
+  // calculate num items in the arrays - the memory usage of the array
+  //       divided by the memory usage of each item. <-- an old "C" trick.
+  numTimers = sizeof(timers2)/sizeof(timers2[0]);
+  numActions = sizeof(actionStatus)/sizeof(actionStatus[0]);
+
+  while(true)
+  {
+    timeSinceStart = millis() - startOfAuton;
+    // message = 0;
+    // loop through all the timers....
+    for (int i = 0; i<numTimers; i++)
+    {
+       // Should this particular timer be triggered?
+       if ((timers2[i][IS_ACTIVE] == true) && (timers2[i][TRIGGER_TIME] <= timeSinceStart))
+       {
+         switch (i) // decide which "case" to do based on the value of "i"
+         {
+           case 0: // close the claw
+              claw_input = CLAW_CLOSED;
+              deactivateTimer(0); // ok, we've done this don't trigger it again.
+           break;
+           case 1: // lift arm
+              activateAction(0);
+              deactivateTimer(1);   // a one-time trigger.
+            break;
+            case 2:
+              activateAction(1);
+              deactivateTimer(2);
+            break;
+            case 3:
+              activateAction(2);
+              //activateAction(3);
+              deactivateTimer(3);
+            break;
+            case 4:
+              encoderReset(leftEncoder);
+              encoderReset(rightEncoder);
+              activateAction(3);
+              activateAction(4);
+              deactivateTimer(4);
+            break;
+            case 5:
+              claw_input = CLAW_OPEN;
+              //activateAction(5);
+              deactivateTimer(5);
+            break;
+            case 6:
+              //claw_input = CLAW_OPEN;
+            break;
+
+         }
+       }
+     }
+
+
+     // loop through all the actions....
+     for (int i = 0; i<numActions; i++)
+     {
+       // should this action be started?
+       if (actionStatus[i] == true)
+       {
+         switch (i) // decide which "case" to do based on the value of "i"
+         {
+           case 0:  // all ahead full....
+             // this is an example of writing the code in the case....
+             //how far forearm will lift when this action is called
+             arrived = armToTarget(1670);
+             message = analogRead(FOREARM_POTENTIOMETER);
+             if (arrived)
+             {
+               deactivateAction(0);  //we're done!
+               forearm_input = 0;
+             }
+           break;
+           case 1:
+           //how far it drives (p1)
+            arrived = driveToTarget(160);
+            message = analogRead(encoderGet(leftEncoder));
+            if (arrived)
+            {
+              deactivateAction(1);
+              auto_y_motion = 0;
+            }
+            break;
+            case 2:
+            //how far it turns
+              arrived = turnToTarget(-300);
+              message = analogRead(encoderGet(rightEncoder));
+            if (arrived)
+            {
+              deactivateAction(2);
+              auto_angle_motion = 0;
+            }
+            break;
+            case 3:
+            //amount of lift
+              arrived = driveToTarget(1400);
               message = analogRead(LIFT_POTENTIOMETER);
             if (arrived)
             {
               deactivateAction(3);
+              lift_input = 0;
+            }
+
+            break;
+            case 4:
+            //drives to pole with scone
+              arrived = driveToTarget(300);
+              message = analogRead(encoderGet(rightEncoder));
+            if (arrived)
+            {
+              deactivateAction(4);
+              auto_y_motion = 0;
+            }
+            break;
+
+            case 5:
+            //lifts again
+              arrived = liftToTarget(2800);
+              message = analogRead(LIFT_POTENTIOMETER);
+            if (arrived)
+            {
+              deactivateAction(5);
               lift_input = 0;
             }
 
@@ -272,8 +441,8 @@ bool liftToTarget(int target)
   int liftPotentiometer = analogRead(LIFT_POTENTIOMETER);
   int error = target - liftPotentiometer;
   //make this error smaller
-  lift_input = -3* error;
-  return abs(error) <10;
+  lift_input = -2* error;
+  return abs(error) <50;
 }
 
 bool armToTarget(int target)
@@ -282,6 +451,12 @@ bool armToTarget(int target)
   int error = target - armPotentiometer;
   forearm_input = -3* error;
   return abs(error) < 10;
+}
+
+bool lowLiftDown(bool down)
+{
+  down = false;
+
 }
 
 // bool Claw(int target)
@@ -310,6 +485,7 @@ void auton_process_motors()
    manageClawMotors(claw_input);
    manageForearmMotors(forearm_input);
    manageLiftMotors(lift_input);
+   //manageLowLiftMotors(int low_lift_input)
    // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
    digitalWrite(3,LED_state);
 }

@@ -38,6 +38,8 @@
  int forearm_pot_value;
  long int startTime;
  long int timeSinceStart;
+ bool liftIn;
+ bool liftOut;
 
  void operatorControl()
  {
@@ -69,6 +71,9 @@
   low_lift_input = joystickGetAnalog(2,3);
   lift_pot_value = analogRead(LIFT_POTENTIOMETER);
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
+  liftIn = digitalRead(LOWLIFT_SWITCH_IN);
+  liftOut = digitalRead(LOWLIFT_SWITCH_OUT);
+
 if (joystickGetDigital(1, 6, JOY_UP))
 {
   claw_input = CLAW_OPEN;
@@ -101,7 +106,14 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
 {
     forearm_input = 0;
 }
-
+if (low_lift_input > 0 && liftOut == false)
+{
+  low_lift_input=0;
+}
+if (low_lift_input < 0 && liftIn == false)
+{
+  low_lift_input=0;
+}
 
 
 
@@ -117,7 +129,7 @@ if  (forearm_input > 0 && forearm_pot_value < 600)//stops forearm from going pas
      char topString[16];
      char bottomString[16];
      snprintf(topString, 16, "L:%d R:%d",encoderGet(leftEncoder),encoderGet(rightEncoder)); // combine string with a variable
-     snprintf(bottomString, 16, "Lf:%d a:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
+     snprintf(bottomString, 16, "Lf:%d a:%d",liftIn,liftOut); // combine string with a variable
      lcdSetText(uart1, 1, topString);
      lcdSetText(uart1, 2, bottomString);
      	//lcdPrint(uart1, 1, "Go Falcons!"); //lcdPrint is ok if you don't have formatting.
