@@ -66,9 +66,9 @@
  // 	x_input = joystickGetAnalog(1,1);
  	y_input = joystickGetAnalog(1,2);
  	angle_input = joystickGetAnalog(1,1);
-  lift_input = joystickGetAnalog(2,2);
+  lift_input = joystickGetAnalog(2,3);
   forearm_input = joystickGetAnalog(1,3);
-  low_lift_input = joystickGetAnalog(2,3);
+  low_lift_input = joystickGetAnalog(2,2);
   lift_pot_value = analogRead(LIFT_POTENTIOMETER);
   forearm_pot_value = analogRead(FOREARM_POTENTIOMETER);
   liftIn = digitalRead(LOWLIFT_SWITCH_IN);
@@ -129,7 +129,7 @@ if (low_lift_input < 0 && liftIn == false)
      char topString[16];
      char bottomString[16];
      snprintf(topString, 16, "L:%d R:%d",encoderGet(leftEncoder),encoderGet(rightEncoder)); // combine string with a variable
-     snprintf(bottomString, 16, "Lf:%d a:%d",liftIn,liftOut); // combine string with a variable
+     snprintf(bottomString, 16, "Lf:%d a:%d",lift_pot_value,forearm_pot_value); // combine string with a variable
      lcdSetText(uart1, 1, topString);
      lcdSetText(uart1, 2, bottomString);
      	//lcdPrint(uart1, 1, "Go Falcons!"); //lcdPrint is ok if you don't have formatting.
