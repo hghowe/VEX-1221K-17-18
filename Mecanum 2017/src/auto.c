@@ -37,6 +37,7 @@ int auto_angle_motion;
 int claw_input;
 int lift_input;
 int forearm_input;
+int low_lift_input;
 
 // example for the blinking light.
 bool LED_state;
@@ -305,7 +306,7 @@ void autonomous2()
            case 0:  // all ahead full....
              // this is an example of writing the code in the case....
              //how far forearm will lift when this action is called
-             arrived = armToTarget(1670);
+             arrived = armToTarget(1600);
              message = analogRead(FOREARM_POTENTIOMETER);
              if (arrived)
              {
@@ -315,7 +316,7 @@ void autonomous2()
            break;
            case 1:
            //how far it drives (p1)
-            arrived = driveToTarget(160);
+            arrived = turnToTarget(-300);
             message = analogRead(encoderGet(leftEncoder));
             if (arrived)
             {
@@ -325,7 +326,7 @@ void autonomous2()
             break;
             case 2:
             //how far it turns
-              arrived = turnToTarget(-300);
+              arrived = driveToTarget(1030);
               message = analogRead(encoderGet(rightEncoder));
             if (arrived)
             {
@@ -334,9 +335,9 @@ void autonomous2()
             }
             break;
             case 3:
-            //amount of lift
-              arrived = driveToTarget(1400);
-              message = analogRead(LIFT_POTENTIOMETER);
+            //low lift
+              lowLiftDown();
+              message = digitalRead(LOWLIFT_SWITCH_OUT);
             if (arrived)
             {
               deactivateAction(3);
@@ -346,7 +347,7 @@ void autonomous2()
             break;
             case 4:
             //drives to pole with scone
-              arrived = driveToTarget(300);
+              arrived = liftToTarget(2800);
               message = analogRead(encoderGet(rightEncoder));
             if (arrived)
             {
@@ -357,7 +358,7 @@ void autonomous2()
 
             case 5:
             //lifts again
-              arrived = liftToTarget(2800);
+              arrived = liftToTarget(3200);
               message = analogRead(LIFT_POTENTIOMETER);
             if (arrived)
             {
@@ -365,6 +366,26 @@ void autonomous2()
               lift_input = 0;
             }
 
+            break;
+            case 6:
+              lowLiftUp();
+              arrived = ! digitalRead(LOWLIFT_SWITCH_IN);
+            if (arrived)
+            {
+              deactivateAction(6);
+              low_lift_input=0;
+            }
+            break;
+            case 7:
+              arrived = turnToTarget(900);
+              message = analogRead(LIFT_POTENTIOMETER);
+            if (arrived)
+            {
+              deactivateAction(5);
+              lift_input = 0;
+            }
+            break;
+            case 8:
             break;
 
 
@@ -453,11 +474,17 @@ bool armToTarget(int target)
   return abs(error) < 10;
 }
 
-bool lowLiftDown(bool down)
+void lowLiftDown()
 {
-  down = false;
-
+  low_lift_input = -127;
 }
+
+void lowLiftUp()
+{
+  low_lift_input = 127;
+}
+
+
 
 // bool Claw(int target)
 // {
@@ -485,6 +512,7 @@ void auton_process_motors()
    manageClawMotors(claw_input);
    manageForearmMotors(forearm_input);
    manageLiftMotors(lift_input);
+   manageLowLiftMotors(low_lift_input);
    //manageLowLiftMotors(int low_lift_input)
    // turn on (true) or off (false) the LED on digital pin 3. (Not motor 3.)
    digitalWrite(3,LED_state);

@@ -243,6 +243,9 @@ bool armToTarget(int target);
 
 bool liftToTarget(int target);
 
+void lowLiftDown();
+void lowLiftUp();
+
 /*
 *  based on the state of the global variables, update the motors.
 */
