@@ -110,6 +110,7 @@ void autonomous();
  */
  void auton1();
 void autonomous2();
+void auton3();
 
 void initializeIO();
 /**
